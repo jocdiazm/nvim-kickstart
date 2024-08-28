@@ -116,6 +116,12 @@ vim.opt.fillchars:append { eob = ' ' }
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
 
+-- Disable swap lines
+vim.o.swapfile = false
+
+--Disable swap lines
+vim.o.showtabline = 0
+
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
 
