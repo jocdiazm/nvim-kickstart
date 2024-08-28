@@ -149,10 +149,6 @@ vim.opt.signcolumn = 'yes'
 -- Decrease update time
 vim.opt.updatetime = 250
 
--- Decrease mapped sequence wait time
--- Displays which-key popup sooner
-vim.opt.timeoutlen = 300
-
 -- Configure how new splits should be opened
 vim.opt.splitright = true
 vim.opt.splitbelow = true
@@ -216,11 +212,24 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 --  Use CTRL+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
+
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
---
+
+-- Diagnostic signs
+local signs = { Error = '󰅙', Warn = '', Hint = '󰌵', Info = 'ℹ' }
+for type, icon in pairs(signs) do
+  local hl = 'DiagnosticSign' .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
+
+-- Remove underline errors
+vim.diagnostic.config {
+  underline = false,
+}
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -277,13 +286,13 @@ require('lazy').setup({
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
+      -- signs = {
+      --   add = { text = '+' },
+      --   change = { text = '~' },
+      --   delete = { text = '_' },
+      --   topdelete = { text = '‾' },
+      --   changedelete = { text = '~' },
+      -- },
     },
   },
 
