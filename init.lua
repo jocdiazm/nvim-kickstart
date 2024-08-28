@@ -106,8 +106,12 @@ vim.g.have_nerd_font = true
 -- Make line numbers default
 vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
+--
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
+
+-- Remove fillchars
+vim.opt.fillchars:append { eob = ' ' }
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -164,6 +168,22 @@ vim.opt.scrolloff = 10
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
+
+-- quick save
+vim.keymap.set('n', '<C-s>', '<cmd>w!<CR>', { desc = 'Save file' })
+
+-- smooth scrolling
+vim.keymap.set('n', '<C-u>', '<C-u>zz')
+vim.keymap.set('n', '<C-d>', '<C-d>zz')
+
+--moving lines with meta keys
+vim.keymap.set('n', '<M-j>', '<cmd>m .+1<cr>==')
+vim.keymap.set('n', '<M-k>', '<cmd>m .-2<cr>==')
+
+-- exit everything
+vim.keymap.set('n', '<leader>wq', '<cmd>qa!<CR>', { desc = 'Force exiting' })
+-- ["<M-j>"] = { "<cmd>m .+1<cr>==", desc = "Move down" },
+-- ["<M-k>"] = { "<cmd>m .-2<cr>==", desc = "Move up" },
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
