@@ -875,16 +875,22 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
+          {
+            'rafamadriz/friendly-snippets',
+            enabled = false,
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load {
+                exclude = {},
+              }
+            end,
+          },
+          {
+            'molleweide/LuaSnip-snippets.nvim',
+            opts = {},
+          },
         },
       },
       'saadparwaiz1/cmp_luasnip',
-
       -- Adds other completion capabilities.
       --  nvim-cmp does not ship with all sources by default. They are split
       --  into multiple repos for maintenance purposes.
@@ -896,7 +902,6 @@ require('lazy').setup({
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
       luasnip.config.setup {}
-
       cmp.setup {
         snippet = {
           expand = function(args)
@@ -963,9 +968,10 @@ require('lazy').setup({
             -- set group index to 0 to skip loading LuaLS completions as lazydev recommends it
             group_index = 0,
           },
-          { name = 'nvim_lsp' },
-          { name = 'luasnip' },
-          { name = 'path' },
+          { name = 'nvim_lsp', priority = 1000, max_item_count = 8 },
+          { name = 'luasnip', priority = 750, max_item_count = 3 },
+          { name = 'buffer', priority = 500, max_item_count = 3 },
+          { name = 'path', priority = 250, max_item_count = 4 },
         },
       }
     end,
