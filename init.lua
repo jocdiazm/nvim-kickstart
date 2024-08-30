@@ -184,6 +184,20 @@ vim.keymap.set('n', '<M-k>', '<cmd>m .-2<cr>==')
 
 -- close current buffer
 vim.keymap.set('n', '<C-w>', '<cmd>bd<CR>', { desc = 'Close current buffer' })
+vim.keymap.set('n', '<leader>bd', '<cmd>bd<CR>', { desc = 'Close current buffer' })
+--
+-- -- Next and Previous Buffer
+vim.keymap.set('n', '<leader>bp', '<cmd>bp<CR>', { desc = 'Previous buffer' })
+vim.keymap.set('n', '<leader>bn', '<cmd>bn<CR>', { desc = 'Next buffer' })
+--
+-- ["<PageUp>"] = {
+--   function() require("astrocore.buffer").nav(vim.v.count > 0 and vim.v.count or 1) end,
+--   desc = "Next buffer",
+-- },
+-- ["<PageDown>"] = {
+--   function() require("astrocore.buffer").nav(-(vim.v.count > 0 and vim.v.count or 1)) end,
+--   desc = "Previous buffer",
+-- },
 
 -- exit everything
 vim.keymap.set('n', '<leader>wq', '<cmd>qa!<CR>', { desc = 'Force exiting' })
@@ -266,7 +280,7 @@ vim.diagnostic.config {
     focusable = false,
     style = 'minimal',
     border = 'rounded',
-    source = 'if_many',
+    source = true,
     header = '',
     prefix = '',
   },
