@@ -110,9 +110,14 @@ vim.opt.number = true
 --  Experiment for yourself to see if you like it!
 vim.opt.relativenumber = true
 
--- Remove fillchars
-vim.opt.fillchars:append { eob = ' ' }
-
+-- UFO folding
+vim.o.foldcolumn = '1' -- '0' is not bad
+vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
+vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
+--
+-- vim.opt.fillchars:append { eob = ' ', fold = ' ', foldopen = '', foldsep = '', foldclose = '' }
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
 
