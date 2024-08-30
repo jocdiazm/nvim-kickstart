@@ -182,10 +182,11 @@ vim.keymap.set('n', '<C-d>', '<C-d>zz')
 vim.keymap.set('n', '<M-j>', '<cmd>m .+1<cr>==')
 vim.keymap.set('n', '<M-k>', '<cmd>m .-2<cr>==')
 
+-- close current buffer
+vim.keymap.set('n', '<C-w>', '<cmd>bd<CR>', { desc = 'Close current buffer' })
+
 -- exit everything
 vim.keymap.set('n', '<leader>wq', '<cmd>qa!<CR>', { desc = 'Force exiting' })
--- ["<M-j>"] = { "<cmd>m .+1<cr>==", desc = "Move down" },
--- ["<M-k>"] = { "<cmd>m .-2<cr>==", desc = "Move up" },
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
@@ -225,9 +226,50 @@ for type, icon in pairs(signs) do
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
--- Remove underline errors
+-- Diagnostics lsp
+vim.keymap.set('n', '<leader>i', function()
+  -- If we find a floating window, close it.
+  local found_float = false
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_get_config(win).relative ~= '' then
+      vim.api.nvim_win_close(win, true)
+      found_float = true
+    end
+  end
+
+  if found_float then
+    return
+  end
+
+  vim.diagnostic.open_float(nil, { focus = false, scope = 'cursor' })
+end, { desc = 'Toggle Diagnostics' })
+
+-- Remove underline errors and stylize
+local diagnostic_signs = {
+  ERROR = ' ',
+  WARN = ' ',
+  HINT = '󰌵 ',
+  INFO = ' ',
+}
+
 vim.diagnostic.config {
+  virtual_text = {
+    source = 'if_many',
+    prefix = function(diagnostic)
+      return diagnostic_signs[vim.diagnostic.severity[diagnostic.severity]]
+    end,
+  },
+  update_in_insert = true,
   underline = false,
+  severity_sort = true,
+  float = {
+    focusable = false,
+    style = 'minimal',
+    border = 'rounded',
+    source = 'if_many',
+    header = '',
+    prefix = '',
+  },
 }
 
 -- [[ Basic Autocommands ]]
@@ -686,7 +728,8 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
+        'stylua',
+        'prettierd',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -740,10 +783,9 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        python = { 'ruff', 'isort', 'black', stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
