@@ -178,7 +178,7 @@ vim.opt.inccommand = 'split'
 vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 10
+vim.opt.scrolloff = 15
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -197,6 +197,9 @@ vim.keymap.set('n', '<M-k>', '<cmd>m .-2<cr>==')
 -- close current buffer
 vim.keymap.set('n', '<C-w>', '<cmd>bd<CR>', { desc = 'Close current buffer' })
 vim.keymap.set('n', '<leader>bd', '<cmd>bd<CR>', { desc = 'Close current buffer' })
+-- close windows that are not a buffer
+vim.api.nvim_set_keymap('n', '<leader>q', [[:lua if vim.bo.buftype ~= '' then vim.cmd('q') end<CR>]], { noremap = true, silent = true })
+
 --
 -- -- Next and Previous Buffer
 vim.keymap.set('n', '<leader>bp', '<cmd>bp<CR>', { desc = 'Previous buffer' })
@@ -210,7 +213,6 @@ vim.keymap.set('n', '<leader>bn', '<cmd>bn<CR>', { desc = 'Next buffer' })
 --   function() require("astrocore.buffer").nav(-(vim.v.count > 0 and vim.v.count or 1)) end,
 --   desc = "Previous buffer",
 -- },
-
 -- exit everything
 vim.keymap.set('n', '<leader>wq', '<cmd>qa!<CR>', { desc = 'Force exiting' })
 
@@ -219,8 +221,12 @@ vim.keymap.set('n', '<leader>wq', '<cmd>qa!<CR>', { desc = 'Force exiting' })
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>ql', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix [L]ist' })
+vim.api.nvim_set_keymap('n', '<F8>', ':lua vim.diagnostic.goto_next()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<F7>', ':lua vim.diagnostic.goto_prev()<CR>', { noremap = true, silent = true })
 
+-- Sessions
+vim.o.sessionoptions = 'buffers,curdir,help,tabpages,winsize,winpos,terminal,localoptions'
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -424,9 +430,14 @@ require('lazy').setup({
       -- Document existing key chains
       spec = {
         { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
+        { '<leader>b', group = '[B]uffer' },
+        { '<leader>g', group = '[G]it' },
+        { '<leader>q', group = '[Q]uit or list' },
+        { '<leader>x', group = '[x]Trouble' },
         { '<leader>d', group = '[D]ocument' },
         { '<leader>r', group = '[R]ename' },
         { '<leader>s', group = '[S]earch' },
+        { '<leader>S', group = '[S]ession' },
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
@@ -500,10 +511,10 @@ require('lazy').setup({
               height = 0.50, -- 50% of the editor's height
             },
             vertical = {
-              height = 0.40,
+              height = 0.50,
             },
             bottom_pane = {},
-            height = 15, -- 10 lines in height
+            height = 12, -- lines in height
           },
         },
         pickers = {

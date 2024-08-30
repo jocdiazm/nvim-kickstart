@@ -35,6 +35,7 @@ return {
   keys = {
     -- Will use Telescope if installed or a vim.ui.select picker otherwise
     { '<leader>Sf', '<cmd>SessionSearch<CR>', desc = 'Session search' },
+    { '<leader>Sd', '<cmd>Autosession delete<CR>', desc = 'Session delete' },
     { '<leader>Ss', '<cmd>SessionSave<CR>', desc = 'Save session' },
     { '<leader>Sa', '<cmd>SessionToggleAutoSave<CR>', desc = 'Toggle autosave' },
   },
