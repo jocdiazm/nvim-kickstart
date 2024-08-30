@@ -27,9 +27,8 @@ return {
     },
 
     init = function()
-      vim.keymap.set('n', 'zR', function()
-        require('ufo').openAllFolds()
-      end)
+      require('ufo').openAllFolds()
+      vim.keymap.set('n', 'zR', function() end)
       vim.keymap.set('n', 'zM', function()
         require('ufo').closeAllFolds()
       end)

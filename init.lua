@@ -111,11 +111,18 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 
 -- UFO folding
-vim.o.foldcolumn = '1' -- '0' is not bad
-vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
-vim.o.foldlevelstart = 99
-vim.o.foldenable = true
+vim.opt.foldcolumn = '1' -- '0' is not bad
+vim.opt.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+vim.opt.foldenable = true
+vim.opt.foldlevelstart = 99
 vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
+-- Create an autocommand to open all folds when a buffer is read or written
+-- vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufWritePost' }, {
+--   pattern = '*',
+--   callback = function()
+--     vim.cmd 'silent! normal! zR' -- Open all folds without echoing the command
+--   end,
+-- })
 --
 -- vim.opt.fillchars:append { eob = ' ', fold = ' ', foldopen = '', foldsep = '', foldclose = '' }
 -- Enable mouse mode, can be useful for resizing splits for example!
