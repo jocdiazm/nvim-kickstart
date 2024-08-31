@@ -219,14 +219,12 @@ vim.keymap.set('n', '<leader>wq', '<cmd>qa!<CR>', { desc = 'Force exiting all' }
 local function save_and_quit_all()
   -- Save all buffers
   vim.cmd 'wa'
-
   -- Close all terminal buffers
   for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
     if vim.bo[bufnr].buftype == 'terminal' then
       vim.api.nvim_buf_delete(bufnr, { force = true }) -- Force close terminal buffers
     end
   end
-
   -- Quit Neovim
   vim.cmd 'qa!'
 end
@@ -775,7 +773,54 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
-        vtsls = {},
+        tailwindcss = {
+          settings = {
+            tailwindCSS = {
+              experimental = {
+                classRegex = {
+                  { 'cva\\(([^)]*)\\)', '["\'`]([^"\'`]*).*?["\'`]' },
+                  { 'cx\\(([^)]*)\\)', "(?:'|\"|`)([^']*)(?:'|\"|`)" },
+                },
+              },
+            },
+          },
+        },
+        --
+        vtsls = {
+          settings = {
+            javascript = {
+              preferences = {
+                importModuleSpecifier = 'non-relative',
+                importModuleSpecifierEnding = 'minimal',
+                importModuleSpecifierPreference = 'non-relative',
+              },
+            },
+            typescript = {
+              suggest = {
+                completeFunctionCalls = true,
+              },
+              preferences = {
+                importModuleSpecifier = 'non-relative',
+                importModuleSpecifierEnding = 'minimal',
+                importModuleSpecifierPreference = 'non-relative',
+              },
+            },
+          },
+        },
+        -- vtsls = {
+        --   settings = {
+        --     typescript = {
+        --       suggest = {
+        --         completeFunctionCalls = true,
+        --       },
+        --       preferences = {
+        --         importModuleSpecifier = 'non-relative',
+        --         importModuleSpecifierEnding = 'minimal',
+        --         importModuleSpecifierPreference = 'non-relative',
+        --       },
+        --     },
+        --   },
+        -- },
         --
         lua_ls = {
           -- cmd = {...},
@@ -812,6 +857,7 @@ require('lazy').setup({
         'ruff_lsp',
         'emmet_language_server',
         'vtsls',
+        'tailwindcss',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -911,6 +957,8 @@ require('lazy').setup({
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-nvim-lsp-signature-help',
+      'luckasRanarison/tailwind-tools.nvim',
+      'onsails/lspkind-nvim',
     },
     config = function()
       -- See `:help cmp`
@@ -989,6 +1037,14 @@ require('lazy').setup({
           { name = 'buffer', priority = 500, max_item_count = 3 },
           { name = 'path', priority = 250, max_item_count = 4 },
         },
+
+        -- formatting = {
+        --   format = function()
+        --     return require('lspkind').cmp_format {
+        --       before = require('tailwind-tools.cmp').lspkind_format,
+        --     }
+        --   end,
+        -- },
       }
     end,
   },
