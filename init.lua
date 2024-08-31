@@ -1111,6 +1111,10 @@ require('lazy').setup({
         'python',
         'javascript',
         'typescript',
+        'go',
+        'rust',
+        'css',
+        'yaml',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
