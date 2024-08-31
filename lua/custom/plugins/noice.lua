@@ -14,8 +14,16 @@ return {
         lsp_doc_border = true, -- add a border to hover docs and signature help
       },
       messages = {
-        view_history = false,
-        view_search = false,
+        -- view_history = false,
+        -- view_search = false,
+        -- NOTE: If you enable messages, then the cmdline is enabled automatically.
+        -- This is a current Neovim limitation.
+        enabled = true, -- enables the Noice messages UI
+        view = 'notify', -- default view for messages
+        view_error = 'notify', -- view for errors
+        view_warn = 'notify', -- view for warnings
+        view_history = 'messages', -- view for :messages
+        view_search = 'virtualtext', -- view for search count messages. Set to `false` to disable
       },
       lsp = {
         override = {
@@ -26,8 +34,11 @@ return {
         signature = {
           auto_open = {
             enabled = false,
+            trigger = true, -- Automatically show signature help when typing a trigger character from the LSP
+            luasnip = true, -- Will open signature help when jumping to Luasnip insert nodes
+            throttle = 100, -- Debounce lsp signature help request by 50ms
           },
-          enabled = false,
+          enabled = true,
         },
       },
     },

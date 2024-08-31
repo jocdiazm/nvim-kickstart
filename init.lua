@@ -198,7 +198,7 @@ vim.keymap.set('n', '<M-k>', '<cmd>m .-2<cr>==')
 vim.keymap.set('n', '<C-w>', '<cmd>bd<CR>', { desc = 'Close current buffer' })
 vim.keymap.set('n', '<leader>bd', '<cmd>bd<CR>', { desc = 'Close current buffer' })
 -- close windows that are not a buffer
-vim.api.nvim_set_keymap('n', '<leader>q', [[:lua if vim.bo.buftype ~= '' then vim.cmd('q') end<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>c', [[:lua if vim.bo.buftype ~= '' then vim.cmd('q') end<CR>]], { noremap = true, silent = true })
 
 --
 -- -- Next and Previous Buffer
@@ -214,7 +214,25 @@ vim.keymap.set('n', '<leader>bn', '<cmd>bn<CR>', { desc = 'Next buffer' })
 --   desc = "Previous buffer",
 -- },
 -- exit everything
-vim.keymap.set('n', '<leader>wq', '<cmd>qa!<CR>', { desc = 'Force exiting' })
+vim.keymap.set('n', '<leader>wq', '<cmd>qa!<CR>', { desc = 'Force exiting all' })
+-- Function to save all buffers and kill terminal buffers, then quit
+local function save_and_quit_all()
+  -- Save all buffers
+  vim.cmd 'wa'
+
+  -- Close all terminal buffers
+  for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.bo[bufnr].buftype == 'terminal' then
+      vim.api.nvim_buf_delete(bufnr, { force = true }) -- Force close terminal buffers
+    end
+  end
+
+  -- Quit Neovim
+  vim.cmd 'qa!'
+end
+
+-- Map <leader>ww to save all, kill terminals, and quit
+vim.keymap.set('n', '<leader>ww', save_and_quit_all, { desc = 'Save, kill terminals, and force exit all' })
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
@@ -384,7 +402,6 @@ require('lazy').setup({
   -- Then, because we use the `config` key, the configuration only runs
   -- after the plugin has been loaded:
   --  config = function() ... end
-
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
@@ -877,16 +894,13 @@ require('lazy').setup({
           --    https://github.com/rafamadriz/friendly-snippets
           {
             'rafamadriz/friendly-snippets',
-            enabled = false,
             config = function()
-              require('luasnip.loaders.from_vscode').lazy_load {
-                exclude = {},
-              }
+              require('luasnip.loaders.from_vscode').lazy_load()
             end,
           },
           {
             'molleweide/LuaSnip-snippets.nvim',
-            opts = {},
+            enabled = true,
           },
         },
       },
@@ -896,6 +910,7 @@ require('lazy').setup({
       --  into multiple repos for maintenance purposes.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-nvim-lsp-signature-help',
     },
     config = function()
       -- See `:help cmp`
@@ -968,8 +983,9 @@ require('lazy').setup({
             -- set group index to 0 to skip loading LuaLS completions as lazydev recommends it
             group_index = 0,
           },
+          { name = 'nvim_lsp_signature_help' },
           { name = 'nvim_lsp', priority = 1000, max_item_count = 8 },
-          { name = 'luasnip', priority = 750, max_item_count = 3 },
+          { name = 'luasnip', priority = 750, max_item_count = 5 },
           { name = 'buffer', priority = 500, max_item_count = 3 },
           { name = 'path', priority = 250, max_item_count = 4 },
         },
