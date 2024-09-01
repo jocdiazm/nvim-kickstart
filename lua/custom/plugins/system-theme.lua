@@ -30,12 +30,12 @@ return {
       update_interval = 1000,
       set_dark_mode = function()
         vim.o.background = 'dark'
-        vim.cmd 'colorscheme gruvbox-material'
+        vim.api.nvim_exec('silent! colorscheme gruvbox-material', false)
         apply_custom_highlights()
       end,
       set_light_mode = function()
         vim.o.background = 'light'
-        vim.cmd 'colorscheme rose-pine'
+        vim.api.nvim_exec('silent! colorscheme rose-pine', false)
         apply_custom_highlights()
       end,
     }

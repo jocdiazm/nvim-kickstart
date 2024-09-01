@@ -76,11 +76,10 @@ return {
   },
   {
     'sainnhe/gruvbox-material',
-    priority = 1000,
-    lazy = false,
+    priority = 1200,
     init = function() -- init function runs before the plugin is loaded
       -- vim.g.gruvbox_material_enable_italic = 1
-      -- vim.g.gruvbox_material_enable_bold = 1
+      vim.g.gruvbox_material_enable_bold = 1
       vim.g.gruvbox_material_background = 'medium'
       vim.g.gruvbox_material_float_style = 'dim'
       vim.g.gruvbox_material_better_performance = 1
@@ -90,7 +89,6 @@ return {
   },
   {
     'sainnhe/everforest',
-    lazy = false,
     priority = 1000,
     init = function() -- init function runs before the plugin is loaded
       vim.g.everforest_enable_italic = 1

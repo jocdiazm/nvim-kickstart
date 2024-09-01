@@ -166,6 +166,9 @@ vim.opt.updatetime = 250
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
+--Remove dumb messages
+vim.opt.shortmess:append 'c'
+
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
@@ -524,10 +527,10 @@ require('lazy').setup({
           },
           layout_config = {
             horizontal = {
-              height = 0.50, -- 50% of the editor's height
+              height = 0.60, -- 50% of the editor's height
             },
             vertical = {
-              height = 0.50,
+              height = 0.60,
             },
             bottom_pane = {},
             height = 12, -- lines in height
@@ -537,12 +540,12 @@ require('lazy').setup({
           -- Customize specific pickers if needed
           find_files = {
             layout_config = {
-              height = 0.4, -- 40% of the editor's height
+              height = 0.50, -- 40% of the editor's height
             },
           },
           buffers = {
             layout_config = {
-              height = 0.3, -- 30% of the editor's height
+              height = 0.5, -- 30% of the editor's height
             },
           },
         },
