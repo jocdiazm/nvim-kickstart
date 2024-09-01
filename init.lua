@@ -968,8 +968,65 @@ require('lazy').setup({
       -- See `:help cmp`
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
+      local lspkind = require 'lspkind'
       luasnip.config.setup {}
+      lspkind.init {
+        mode = 'symbol',
+        preset = 'codicons',
+        symbol_map = {
+          Text = '󰉿',
+          Method = '󰆧',
+          Function = '󰊕',
+          Constructor = '',
+          Field = '󰜢',
+          Variable = '󰀫',
+          Class = '󰠱',
+          Interface = '',
+          Module = '',
+          Property = '󰜢',
+          Unit = '󰑭',
+          Value = '󰎠',
+          Enum = '',
+          Keyword = '󰌋',
+          Snippet = '',
+          Color = '',
+          File = '󰈙',
+          Reference = '󰈇',
+          Folder = '󰉋',
+          EnumMember = '',
+          Constant = '󰏿',
+          Struct = '󰙅',
+          Event = '',
+          Operator = '󰆕',
+          TypeParameter = '',
+        },
+      }
       cmp.setup {
+        window = {
+          completion = cmp.config.window.bordered {
+            side_padding = 1,
+            winhighlight = 'Normal:Normal,FloatBorder:BorderBG,CursorLine:PmenuSel,Search:None',
+          },
+          documentation = cmp.config.window.bordered {
+            side_padding = 1,
+            winhighlight = 'Normal:Normal,FloatBorder:BorderBG,CursorLine:PmenuSel,Search:None',
+          },
+        },
+        formatting = {
+          fields = { 'kind', 'abbr', 'menu' },
+          format = lspkind.cmp_format {
+            mode = 'symbol', -- show only symbol annotations
+            menu = { -- showing type in menu
+              nvim_lsp = '[LSP]',
+              path = '[Path]',
+              buffer = '[Buffer]',
+              luasnip = '[LuaSnip]',
+            },
+            maxwidth = 60,
+            ellipsis_char = '...',
+            before = require('tailwind-tools.cmp').lspkind_format,
+          },
+        },
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
@@ -1035,24 +1092,15 @@ require('lazy').setup({
             -- set group index to 0 to skip loading LuaLS completions as lazydev recommends it
             group_index = 0,
           },
-          { name = 'nvim_lsp_signature_help' },
-          { name = 'nvim_lsp', priority = 1000, max_item_count = 8 },
-          { name = 'luasnip', priority = 750, max_item_count = 5 },
+          { name = 'luasnip', priority = 1000, max_item_count = 5 },
+          { name = 'nvim_lsp', priority = 750, max_item_count = 8 },
+          { name = 'nvim_lsp_signature_help', priority = 750 },
           { name = 'buffer', priority = 500, max_item_count = 3 },
           { name = 'path', priority = 250, max_item_count = 4 },
         },
-
-        -- formatting = {
-        --   format = function()
-        --     return require('lspkind').cmp_format {
-        --       before = require('tailwind-tools.cmp').lspkind_format,
-        --     }
-        --   end,
-        -- },
       }
     end,
   },
-
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
