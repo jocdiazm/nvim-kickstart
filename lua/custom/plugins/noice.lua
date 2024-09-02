@@ -15,7 +15,7 @@ return {
         lsp_doc_border = true, -- add a border to hover docs and signature help
       },
       messages = {
-        view_history = false,
+        view_history = 'messages',
         view_search = false,
         --
         -- view_history = 'messages', -- view for :messages

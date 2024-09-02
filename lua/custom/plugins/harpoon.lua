@@ -71,14 +71,14 @@ return {
 
     return {
       {
-        '<leader>ft',
+        '<leader>ct',
         function()
           toggle_telescope(harpoon:list())
         end,
         desc = 'Harpoon (Telescope)',
       },
       {
-        '<leader>fh',
+        '<leader>ch',
         function()
           harpoon.ui:toggle_quick_menu(harpoon:list())
         end,

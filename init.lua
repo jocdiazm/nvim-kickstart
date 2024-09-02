@@ -777,7 +777,20 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {
+          settings = {
+            pyright = {
+              -- Using Ruff's import organizer
+              disableOrganizeImports = true,
+            },
+            python = {
+              analysis = {
+                -- Ignore all files for analysis to exclusively use Ruff for linting
+                ignore = { '*' },
+              },
+            },
+          },
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -786,6 +799,23 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
+        ruff = {
+          trace = 'messages',
+          init_options = {
+            settings = {
+              -- Modification to any of these settings has no effect.
+              logLevel = 'debug',
+              enable = true,
+              ignoreStandardLibrary = true,
+              organizeImports = true,
+              fixAll = true,
+              lint = {
+                enable = true,
+                run = 'onType',
+              },
+            },
+          },
+        },
         tailwindcss = {
           settings = {
             tailwindCSS = {
@@ -867,7 +897,6 @@ require('lazy').setup({
         'lua_ls',
         'prettierd',
         'ruff',
-        'ruff_lsp',
         'emmet_language_server',
         'vtsls',
         'tailwindcss',
@@ -891,7 +920,7 @@ require('lazy').setup({
 
   { -- Autoformat
     'stevearc/conform.nvim',
-    event = { 'BufWritePre' },
+    event = { 'BufWritePre', 'BufNewFile' },
     cmd = { 'ConformInfo' },
     keys = {
       {
@@ -925,7 +954,13 @@ require('lazy').setup({
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        python = { 'ruff', 'isort', 'black', stop_after_first = true },
+        python = { -- To fix auto-fixable lint errors.
+          'ruff_fix',
+          'ruff_format',
+          'ruff_organize_imports',
+          'isort',
+          'black',
+        },
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
