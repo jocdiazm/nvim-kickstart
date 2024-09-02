@@ -1,19 +1,3 @@
--- return {
---   'f-person/auto-dark-mode.nvim',
---   priority = 1200,
---   config = {
---     update_interval = 1000,
---     set_dark_mode = function()
---       vim.o.background = 'dark'
---       vim.cmd 'colorscheme gruvbox-material'
---     end,
---     set_light_mode = function()
---       vim.o.background = 'light'
---       vim.cmd 'colorscheme rose-pine'
---     end,
---   },
--- }
---
 return {
   'f-person/auto-dark-mode.nvim',
   priority = 1200,
@@ -30,16 +14,15 @@ return {
       update_interval = 1000,
       set_dark_mode = function()
         vim.o.background = 'dark'
-        vim.api.nvim_exec('silent! colorscheme gruvbox-material', false)
+        vim.cmd 'colorscheme gruvbox-material'
         apply_custom_highlights()
       end,
       set_light_mode = function()
         vim.o.background = 'light'
-        vim.api.nvim_exec('silent! colorscheme rose-pine', false)
+        vim.cmd 'colorscheme rose-pine'
         apply_custom_highlights()
       end,
     }
-
     auto_dark_mode.init()
   end,
 }
