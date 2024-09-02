@@ -199,10 +199,15 @@ vim.keymap.set('n', '<M-j>', '<cmd>m .+1<cr>==')
 vim.keymap.set('n', '<M-k>', '<cmd>m .-2<cr>==')
 
 -- close current buffer
-vim.keymap.set('n', '<C-w>', '<cmd>bd<CR>', { desc = 'Close current buffer' })
-vim.keymap.set('n', '<leader>bd', '<cmd>bd<CR>', { desc = 'Close current buffer' })
+vim.keymap.set('n', '<C-w>', '<cmd>bd!<CR>', { desc = 'Close current buffer' })
+vim.keymap.set('n', '<leader>bd', '<cmd>bd!<CR>', { desc = 'Close current buffer' })
 -- close windows that are not a buffer
-vim.api.nvim_set_keymap('n', '<leader>c', [[:lua if vim.bo.buftype ~= '' then vim.cmd('q') end<CR>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap(
+  'n',
+  '<leader>q',
+  [[:lua if vim.bo.buftype ~= '' then vim.cmd('q') end<CR>]],
+  { noremap = true, silent = true, desc = 'Quit window that are not a buffer' }
+)
 
 --
 -- -- Next and Previous Buffer
@@ -241,7 +246,7 @@ vim.keymap.set('n', '<leader>ww', save_and_quit_all, { desc = 'Save, kill termin
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '<leader>ql', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix [L]ist' })
+vim.keymap.set('n', '<leader>cq', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix [L]ist' })
 vim.api.nvim_set_keymap('n', '<F8>', ':lua vim.diagnostic.goto_next()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<F7>', ':lua vim.diagnostic.goto_prev()<CR>', { noremap = true, silent = true })
 
@@ -279,7 +284,7 @@ for type, icon in pairs(signs) do
 end
 
 -- Diagnostics lsp
-vim.keymap.set('n', '<leader>i', function()
+local function show_diaganostics()
   -- If we find a floating window, close it.
   local found_float = false
   for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -293,8 +298,9 @@ vim.keymap.set('n', '<leader>i', function()
     return
   end
 
-  vim.diagnostic.open_float(nil, { focus = false, scope = 'cursor' })
-end, { desc = 'Toggle Diagnostics' })
+  vim.diagnostic.open_float(nil, { focus = false, scope = 'line' })
+end
+vim.keymap.set('n', '<leader>i', show_diaganostics, { desc = 'Toggle Diagnostics' })
 
 -- Remove underline errors and stylize
 local diagnostic_signs = {
@@ -454,7 +460,7 @@ require('lazy').setup({
         { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
         { '<leader>b', group = '[B]uffer' },
         { '<leader>g', group = '[G]it' },
-        { '<leader>q', group = '[Q]uit or list' },
+        { '<leader>q', group = '[Q]uit' },
         { '<leader>x', group = '[x]Trouble' },
         { '<leader>d', group = '[D]ocument' },
         { '<leader>r', group = '[R]ename' },
