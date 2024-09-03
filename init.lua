@@ -106,11 +106,14 @@ vim.g.have_nerd_font = true
 
 -- Make line numbers default
 vim.opt.number = true
+-- Make soft line dissapear
+vim.wo.wrap = true
+vim.wo.linebreak = true
+vim.wo.list = false
 -- You can also add relative line numbers, to help with jumping.
 --
 --  Experiment for yourself to see if you like it!
 vim.opt.relativenumber = true
-
 -- UFO folding
 vim.opt.foldcolumn = '1' -- '0' is not bad
 vim.opt.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
