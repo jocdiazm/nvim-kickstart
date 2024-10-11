@@ -1,5 +1,6 @@
 return {
   'nvim-treesitter/nvim-treesitter-context',
+  enabled = false,
   config = function()
     local ts_context = require 'treesitter-context'
     ts_context.setup {

@@ -101,7 +101,6 @@ return {
         end,
         desc = 'Harpoon: Previous',
       },
-
       {
         '<c-n>',
         function()

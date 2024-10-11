@@ -141,6 +141,14 @@ vim.o.showtabline = 0
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
 
+-- Make vim faster maybe?
+vim.loader.enable()
+
+-- Set tab width for rendering as two spaces
+vim.opt.tabstop = 4 -- Render a tab as 2 spaces
+vim.opt.shiftwidth = 4 -- Indentation amount when using '>>' or '<<'
+vim.opt.expandtab = false -- Ensure tabs aren't converted to spaces
+--
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
@@ -172,14 +180,17 @@ vim.opt.splitbelow = true
 --Remove dumb messages
 vim.opt.shortmess:append 'c'
 
+--Make vim cmd height?
+vim.o.cmdheight = 0
+--
 -- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = '··', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
-vim.opt.inccommand = 'split'
+-- vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
 vim.opt.cursorline = true
@@ -192,6 +203,7 @@ vim.opt.scrolloff = 15
 
 -- quick save
 vim.keymap.set('n', '<C-s>', '<cmd>w!<CR>', { desc = 'Save file' })
+vim.keymap.set('n', '<M-s>', '<cmd>w!<CR>', { desc = 'Save file' })
 
 -- smooth scrolling
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
@@ -246,9 +258,28 @@ vim.keymap.set('n', '<leader>ww', save_and_quit_all, { desc = 'Save, kill termin
 
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
+vim.o.hlsearch = false
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+-- Diagnostics lsp
+local function show_diaganostics()
+  -- If we find a floating window, close it.
+  local found_float = false
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_get_config(win).relative ~= '' then
+      vim.api.nvim_win_close(win, true)
+      found_float = true
+    end
+  end
+
+  if found_float then
+    return
+  end
+
+  vim.diagnostic.open_float(nil, { focus = false, scope = 'line' })
+end
 -- Diagnostic keymaps
+vim.keymap.set('n', '<leader>cd', show_diaganostics, { desc = 'Toggle Code Diagnostics' })
 vim.keymap.set('n', '<leader>cq', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix [L]ist' })
 vim.api.nvim_set_keymap('n', '<F8>', ':lua vim.diagnostic.goto_next()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<F7>', ':lua vim.diagnostic.goto_prev()<CR>', { noremap = true, silent = true })
@@ -285,25 +316,6 @@ for type, icon in pairs(signs) do
   local hl = 'DiagnosticSign' .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
-
--- Diagnostics lsp
-local function show_diaganostics()
-  -- If we find a floating window, close it.
-  local found_float = false
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    if vim.api.nvim_win_get_config(win).relative ~= '' then
-      vim.api.nvim_win_close(win, true)
-      found_float = true
-    end
-  end
-
-  if found_float then
-    return
-  end
-
-  vim.diagnostic.open_float(nil, { focus = false, scope = 'line' })
-end
-vim.keymap.set('n', '<leader>i', show_diaganostics, { desc = 'Toggle Diagnostics' })
 
 -- Remove underline errors and stylize
 local diagnostic_signs = {
@@ -794,6 +806,70 @@ require('lazy').setup({
             },
           },
         },
+        pylsp = {
+          settings = {
+            pylsp = {
+              plugins = {
+                pycodestyle = { enabled = false },
+                yapf = { enabled = false },
+                jedi_completion = { enabled = false },
+                rope_autoimport = {
+                  enabled = true,
+                  completions = { enabled = false },
+                  code_actions = { enabled = true },
+                },
+                pyflakes = { enabled = false },
+              },
+            },
+          },
+        },
+        --golang
+        gopls = {
+          settings = {
+            gopls = {
+              analyses = {
+                ST1003 = true,
+                fieldalignment = false,
+                fillreturns = true,
+                nilness = true,
+                nonewvars = true,
+                shadow = true,
+                undeclaredname = true,
+                unreachable = true,
+                unusedparams = true,
+                unusedwrite = true,
+                useany = true,
+              },
+              codelenses = {
+                gc_details = true, -- Show a code lens toggling the display of gc's choices.
+                generate = true, -- show the `go generate` lens.
+                regenerate_cgo = true,
+                test = true,
+                tidy = true,
+                upgrade_dependency = true,
+                vendor = true,
+              },
+              hints = {
+                assignVariableTypes = true,
+                compositeLiteralFields = true,
+                compositeLiteralTypes = true,
+                constantValues = true,
+                functionTypeParameters = true,
+                parameterNames = true,
+                rangeVariableTypes = true,
+              },
+              buildFlags = { '-tags', 'integration' },
+              completeUnimported = true,
+              diagnosticsDelay = '500ms',
+              gofumpt = true,
+              matcher = 'Fuzzy',
+              semanticTokens = true,
+              staticcheck = true,
+              symbolMatcher = 'fuzzy',
+              usePlaceholders = true,
+            },
+          },
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -903,6 +979,13 @@ require('lazy').setup({
         'emmet_language_server',
         'vtsls',
         'tailwindcss',
+        'delve',
+        'gopls',
+        'gomodifytags',
+        'gotests',
+        'iferr',
+        'impl',
+        'goimports',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -1009,6 +1092,7 @@ require('lazy').setup({
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-nvim-lsp-signature-help',
       'luckasRanarison/tailwind-tools.nvim',
+      'lukas-reineke/cmp-under-comparator',
       'onsails/lspkind-nvim',
     },
     config = function()
@@ -1072,6 +1156,17 @@ require('lazy').setup({
             maxwidth = 60,
             ellipsis_char = '...',
             before = require('tailwind-tools.cmp').lspkind_format,
+          },
+        },
+        sorting = {
+          priority_weight = 3,
+          comparators = {
+            cmp.config.compare.offset,
+            cmp.config.compare.exact,
+            cmp.config.compare.score,
+            cmp.config.compare.recently_used,
+            require('cmp-under-comparator').under,
+            cmp.config.compare.kind,
           },
         },
         snippet = {

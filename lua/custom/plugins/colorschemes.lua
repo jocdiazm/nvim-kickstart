@@ -76,8 +76,9 @@ return {
   },
   {
     'sainnhe/gruvbox-material',
-    priority = 1200,
-    init = function() -- init function runs before the plugin is loaded
+    priority = 1000,
+    lazy = false,
+    config = function() -- init function runs before the plugin is loaded
       -- vim.g.gruvbox_material_enable_italic = 1
       vim.g.gruvbox_material_enable_bold = 1
       vim.g.gruvbox_material_background = 'medium'

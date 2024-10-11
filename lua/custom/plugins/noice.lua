@@ -60,7 +60,42 @@ return {
         {
           filter = {
             event = 'msg_show',
+            kind = '*',
+            find = 'autoimport',
+          },
+          opts = { skip = true },
+        },
+        {
+          filter = {
+            event = 'msg_show',
+            kind = '',
+            find = 'autoimport',
+          },
+          opts = { skip = true },
+        },
+        {
+          filter = {
+            event = 'lsp',
+            kind = '',
+            find = 'autoimport',
+          },
+          opts = { skip = true },
+        },
+        {
+          filter = {
+            event = 'msg_show',
             kind = 'search_count',
+          },
+          opts = { skip = true },
+        },
+        {
+          filter = {
+            event = 'lsp',
+            kind = 'progress',
+            cond = function(message)
+              local client = vim.tbl_get(message.opts, 'progress', 'client')
+              return client == 'pylsp'
+            end,
           },
           opts = { skip = true },
         },
