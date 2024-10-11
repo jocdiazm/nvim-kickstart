@@ -203,15 +203,13 @@ vim.opt.scrolloff = 15
 
 -- quick save
 vim.keymap.set('n', '<C-s>', '<cmd>w!<CR>', { desc = 'Save file' })
-vim.keymap.set('n', '<M-s>', '<cmd>w!<CR>', { desc = 'Save file' })
 
 -- smooth scrolling
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
 
---moving lines with meta keys
-vim.keymap.set('n', '<M-j>', '<cmd>m .+1<cr>==')
-vim.keymap.set('n', '<M-k>', '<cmd>m .-2<cr>==')
+--using inc-rename
+vim.keymap.set('n', '<leader>lr', ':IncRename ', { desc = 'Rename current word using increname' })
 
 -- close current buffer
 vim.keymap.set('n', '<C-w>', '<cmd>bd!<CR>', { desc = 'Close current buffer' })
