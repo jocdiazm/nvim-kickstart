@@ -147,6 +147,8 @@ vim.loader.enable()
 -- Set tab width for rendering as two spaces
 vim.opt.tabstop = 4 -- Render a tab as 2 spaces
 vim.opt.shiftwidth = 4 -- Indentation amount when using '>>' or '<<'
+vim.o.smartcase = true
+vim.o.autoindent = true
 vim.opt.expandtab = false -- Ensure tabs aren't converted to spaces
 --
 -- Sync clipboard between OS and Neovim.
