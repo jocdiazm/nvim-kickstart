@@ -205,7 +205,7 @@ vim.opt.scrolloff = 15
 
 -- quick save
 vim.keymap.set('n', '<C-s>', '<cmd>w!<CR>', { desc = 'Save file' })
-vim.keymap.set('n', '<D-s>', '<cmd>w!<CR>', { desc = 'Save file' })
+vim.keymap.set({ 'n', 'v', 'i' }, '<D-s>', '<cmd>w!<CR>', { desc = 'Save file' })
 
 -- smooth scrolling
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
