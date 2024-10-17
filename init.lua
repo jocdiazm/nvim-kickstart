@@ -199,12 +199,11 @@ vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 15
-
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
 -- quick save
-vim.keymap.set('n', '<C-s>', '<cmd>w!<CR>', { desc = 'Save file' })
+vim.keymap.set({ 'n', 'v', 'i' }, '<C-s>', '<cmd>w!<CR>', { desc = 'Save file' })
 vim.keymap.set({ 'n', 'v', 'i' }, '<D-s>', '<cmd>w!<CR>', { desc = 'Save file' })
 
 -- smooth scrolling
@@ -1042,13 +1041,15 @@ require('lazy').setup({
         -- Conform can also run multiple formatters sequentially
         -- You can use 'stop_after_first' to run the first available formatter from the list
         python = { -- To fix auto-fixable lint errors.
-          'ruff_fix',
+          'ruff_fx',
           'ruff_format',
           'ruff_organize_imports',
           'isort',
           'black',
         },
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
@@ -1092,7 +1093,7 @@ require('lazy').setup({
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
       'hrsh7th/cmp-nvim-lsp-signature-help',
-      'luckasRanarison/tailwind-tools.nvim',
+      -- 'luckasRanarison/tailwind-tools.nvim',
       'lukas-reineke/cmp-under-comparator',
       'onsails/lspkind-nvim',
     },
@@ -1295,6 +1296,10 @@ require('lazy').setup({
         'c',
         'diff',
         'html',
+        'css',
+        'tsx',
+        'javascript',
+        'typescript',
         'lua',
         'luadoc',
         'markdown',
@@ -1303,11 +1308,8 @@ require('lazy').setup({
         'vim',
         'vimdoc',
         'python',
-        'javascript',
-        'typescript',
         'go',
         'rust',
-        'css',
         'yaml',
       },
       -- Autoinstall languages that are not installed
