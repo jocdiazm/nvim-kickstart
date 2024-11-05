@@ -15,6 +15,10 @@ return {
       set_dark_mode = function()
         vim.o.background = 'dark'
         vim.cmd 'colorscheme gruvbox-material'
+        -- vim.cmd 'colorscheme fleet'
+        -- vim.cmd 'colorscheme rosebones'
+        -- vim.cmd 'colorscheme zenbones'
+        -- vim.cmd 'colorscheme nordbones'
         apply_custom_highlights()
       end,
       set_light_mode = function()
