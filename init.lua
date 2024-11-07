@@ -210,6 +210,11 @@ vim.keymap.set({ 'n', 'v', 'i' }, '<D-s>', '<cmd>w!<CR>', { desc = 'Save file' }
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
 
+-- smooth back and forth
+vim.keymap.set('n', '<C-o>', '<C-o>zz')
+vim.keymap.set('n', '<C-i>', '<C-i>zz')
+vim.keymap.set('n', 'gd', 'gdzz')
+
 --using inc-rename
 vim.keymap.set('n', '<leader>lr', ':IncRename ', { desc = 'Rename current word using increname' })
 

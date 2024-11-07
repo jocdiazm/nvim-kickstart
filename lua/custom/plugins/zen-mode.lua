@@ -14,6 +14,7 @@ return {
         -- relativenumber = false, -- disable relative numbers
         -- cursorline = false, -- disable cursorline
         -- cursorcolumn = false, -- disable cursor column
+        -- border = 'yes',
         foldcolumn = '0', -- disable fold column
         -- list = false, -- disable whitespace characters
       },
