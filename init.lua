@@ -284,7 +284,11 @@ local function show_diaganostics()
   vim.diagnostic.open_float(nil, { focus = false, scope = 'line' })
 end
 -- Diagnostic keymaps
+vim.keymap.set('n', '<leader>td', function()
+  vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+end, { silent = true, noremap = true })
 vim.keymap.set('n', '<leader>cd', show_diaganostics, { desc = 'Toggle Code Diagnostics' })
+vim.keymap.set('n', '<leader>ld', show_diaganostics, { desc = 'Toggle Code Diagnostics' })
 vim.keymap.set('n', '<leader>cq', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix [L]ist' })
 vim.api.nvim_set_keymap('n', '<F8>', ':lua vim.diagnostic.goto_next()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<F7>', ':lua vim.diagnostic.goto_prev()<CR>', { noremap = true, silent = true })
@@ -315,6 +319,12 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- Move lines below and up
+vim.keymap.set('n', '<C-J>', ':m .+1<CR>==', { silent = true }) -- move line up(n)
+vim.keymap.set('n', '<C-K>', ':m .-2<CR>==', { silent = true }) -- move line down(n)
+vim.keymap.set('v', '<C-J>', ":m '>+1<CR>gv=gv", { silent = true }) -- move line up(v)
+vim.keymap.set('v', '<C-K>', ":m '<-2<CR>gv=gv", { silent = true }) -- move line down(v)
+--
 -- Diagnostic signs
 local signs = { Error = '󰅙', Warn = '', Hint = '󰌵', Info = 'ℹ' }
 for type, icon in pairs(signs) do
@@ -322,7 +332,7 @@ for type, icon in pairs(signs) do
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
 end
 
--- Remove underline errors and stylize
+-- Remove underline errors,virtual text only on errors and and stylize
 local diagnostic_signs = {
   ERROR = ' ',
   WARN = ' ',
@@ -336,6 +346,7 @@ vim.diagnostic.config {
     prefix = function(diagnostic)
       return diagnostic_signs[vim.diagnostic.severity[diagnostic.severity]]
     end,
+    severity = { min = vim.diagnostic.severity.ERROR },
   },
   update_in_insert = true,
   underline = false,
@@ -732,6 +743,7 @@ require('lazy').setup({
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
           map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
+          map('<leader>.', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
@@ -1034,11 +1046,15 @@ require('lazy').setup({
         if disable_filetypes[vim.bo[bufnr].filetype] then
           lsp_format_opt = 'never'
         else
-          lsp_format_opt = 'fallback'
+          -- lsp_format_opt = 'fallback'
+          lsp_format_opt = 'first'
         end
         return {
           timeout_ms = 500,
           lsp_format = lsp_format_opt,
+          filter = function(client)
+            return client.name == 'eslint'
+          end,
         }
       end,
       formatters_by_ft = {
@@ -1052,9 +1068,18 @@ require('lazy').setup({
           'isort',
           'black',
         },
-        javascript = { 'prettierd', 'prettier', stop_after_first = true },
-        typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
-        typescript = { 'prettierd', 'prettier', stop_after_first = true },
+        -- typescript = { { 'prettierd', 'prettier' } },
+        -- typescriptreact = { { 'prettierd', 'prettier' } },
+        -- javascript = { { 'prettierd', 'prettier' } },
+        -- javascriptreact = { { 'prettierd', 'prettier' } },
+        --
+        typescript = { 'prettierd', 'prettier' },
+        typescriptreact = { 'prettierd', 'prettier' },
+        javascript = { 'prettierd', 'prettier' },
+        javascriptreact = { 'prettierd', 'prettier' },
+        -- javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        -- typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        -- typescript = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
