@@ -341,13 +341,7 @@ local diagnostic_signs = {
 }
 
 vim.diagnostic.config {
-  virtual_text = {
-    source = 'if_many',
-    prefix = function(diagnostic)
-      return diagnostic_signs[vim.diagnostic.severity[diagnostic.severity]]
-    end,
-    severity = { min = vim.diagnostic.severity.ERROR },
-  },
+  virtual_text = false,
   update_in_insert = true,
   underline = false,
   severity_sort = true,
@@ -361,6 +355,24 @@ vim.diagnostic.config {
   },
 }
 
+local virtual_text_config = {
+  source = 'if_many',
+  prefix = function(diagnostic)
+    return diagnostic_signs[vim.diagnostic.severity[diagnostic.severity]]
+  end,
+  severity = { min = vim.diagnostic.severity.ERROR },
+}
+
+local function toggle_virtual_text()
+  local current_value = vim.diagnostic.config().virtual_text
+  if current_value then
+    vim.diagnostic.config { virtual_text = false }
+  else
+    vim.diagnostic.config { virtual_text = virtual_text_config }
+  end
+end
+
+vim.keymap.set('n', '<leader>tt', toggle_virtual_text, { noremap = true, silent = true, desc = '[t]oggle virtual [t]ext' })
 --
 --
 -- [[ Basic Autocommands ]]
