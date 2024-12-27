@@ -73,14 +73,13 @@ return {
         additional_vim_regex_highlighting = false,
       },
     },
-  },
-  {
+    {},
     'sainnhe/gruvbox-material',
     priority = 1000,
     lazy = false,
     config = function() -- init function runs before the plugin is loaded
       -- vim.g.gruvbox_material_enable_italic = 1
-      vim.g.gruvbox_material_enable_bold = 1
+      vim.g.gruvbox_material_enable_bold = 0
       vim.g.gruvbox_material_background = 'medium'
       vim.g.gruvbox_material_float_style = 'dim'
       vim.g.gruvbox_material_better_performance = 1
@@ -97,8 +96,8 @@ return {
       vim.g.everforest_background = 'hard'
       vim.g.everforest_float_style = 'dim'
       vim.g.everforest_better_performance = 1
-      -- vim.g.everforest_ui_contrast = "high"
     end,
+    -- vim.g.everforest_ui_contrast = "high"
   },
   {
     'rose-pine/neovim',

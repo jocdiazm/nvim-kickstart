@@ -1332,6 +1332,9 @@ require('lazy').setup({
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
+    dependencies = {
+      { 'windwp/nvim-ts-autotag' },
+    },
     opts = {
       ensure_installed = {
         'bash',
